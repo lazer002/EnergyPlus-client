@@ -66,7 +66,7 @@ function Home() {
       loop
       autoPlay
       muted
-      className="h-100 z-0 relative"
+      className="h-100 z-0"
       data-scroll
       data-scroll-speed="-1"
     ></video>
