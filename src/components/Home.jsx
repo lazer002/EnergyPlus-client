@@ -2,18 +2,10 @@ import React from 'react'
 import gsap from "gsap";
 import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-import banner from '../assets/da.png'
-import Carousel from './carousel.jsx'
 import '../css/hscroll.css'
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Bannertitle from './Bannertitle.jsx';
 import Perks from './Perks.jsx';
 import Details from './details.jsx';
 import Vod from '../assets/video/v3.webm'
-//  import Sliderrr from './slider.jsx'
-// import Vod2 from '../assets/video/v.mp4'
 import Footer from './Footer.jsx';
 import Fourtwo from './fourtwo.jsx';
 import p1 from '../assets/p3.png'
@@ -22,10 +14,15 @@ import p3 from '../assets/p5.png'
 import p4 from '../assets/p9.png'
 import Move from './Move.jsx';
 import LocomotiveScroll from 'locomotive-scroll';
-import Crd_caro from './crd_caro.jsx';
-
+// import Carousel from './carousel.jsx'
+// import Crd_caro from './crd_caro.jsx';
+// import Vod2 from '../assets/video/v.mp4'
+//  import Sliderrr from './slider.jsx'
+// import Bannertitle from './Bannertitle.jsx';
+// import banner from '../assets/da.png'
 
 function Home() {
+
 
   const locomotiveScroll = new LocomotiveScroll()
 
