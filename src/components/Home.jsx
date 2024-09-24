@@ -69,101 +69,52 @@ function Home() {
       <Move />
       
       <Details />
-      <div className="text-banner  bg-black relative -bottom-16  rotate-1 z-50 overflow-hidden">
-        <div className="offertext flex border-2 border-white py-2">
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-  
-        </div>
-      </div>
+      <div className="text-banner bg-black relative -bottom-16 rotate-1 z-50 overflow-hidden">
+  <div className="offertext flex border-2 border-white py-2">
+    {Array.from({ length: 14 }, (_, i) => (
+      <div key={i} className="whitespace-nowrap px-8">$ Get Discount Up TO 30% $</div>
+    ))}
+  </div>
+</div>
+
 
       <div className="text-banner bg-black relative -bottom-24 -rotate-1 z-50">
         <div className="offertext1 flex border-2 border-white py-2 text-left">
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
+        <div className="text-banner bg-black relative -bottom-16 rotate-1 z-50 overflow-hidden">
+  <div className="offertext flex border-2 border-white py-2">
+    {Array.from({ length: 14 }, (_, i) => (
+      <div key={i} className="whitespace-nowrap px-8">$ Get Discount Up TO 30% $</div>
+    ))}
+  </div>
+</div>
+
   
         </div>
       </div>
 
       <div className="text-banner bg-black relative py-12 rotate-3 -top-4 -left-2 z-40">
         <div className="offertext1 flex border-2 border-white  text-left">
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
+        <div className="text-banner bg-black relative -bottom-16 rotate-1 z-50 overflow-hidden">
+  <div className="offertext flex border-2 border-white py-2">
+    {Array.from({ length: 14 }, (_, i) => (
+      <div key={i} className="whitespace-nowrap px-8">$ Get Discount Up TO 30% $</div>
+    ))}
+  </div>
+</div>
+
   
         </div>
       </div>
       <div className="text-banner bg-black relative -rotate-1 z-50 overflow-hidden -top-12">
         <div className="offertext flex border-2 border-white py-2">
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
-          <div className=' whitespace-nowrap px-8'>$  Get Discount Up TO 30%  $</div>
+        <div className="text-banner bg-black relative -bottom-16 rotate-1 z-50 overflow-hidden">
+  <div className="offertext flex border-2 border-white py-2">
+    {Array.from({ length: 14 }, (_, i) => (
+      <div key={i} className="whitespace-nowrap px-8">$ Get Discount Up TO 30% $</div>
+    ))}
+  </div>
+</div>
+
   
         </div>
       </div>
