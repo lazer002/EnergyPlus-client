@@ -1,9 +1,9 @@
-import React, { useRef,useState } from 'react'
+import React from 'react'
 import { BrowserRouter,Route,Routes } from "react-router-dom";
 import Navbar from './components/Navbar.jsx';
 import Home from './components/Home.jsx';
 import Signup from './components/signup.jsx'
-import Login from './components/login.jsx'
+import Login from './components/Login.jsx'
 import Contect from './components/Contect.jsx';
 import About from './components/About.jsx';
 import Product from './components/Product.jsx';
@@ -35,6 +35,7 @@ const locomotiveScroll = new LocomotiveScroll()
 <Route  path='/Contect' element={<Contect/>}  />
 <Route  path='/About' element={<About/>}  />
 <Route  path='/Signup' element={<Signup/>}  />
+<Route  path='/Login' element={<Login/>}  />
 
 
 </Routes>
