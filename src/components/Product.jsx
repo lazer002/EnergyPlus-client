@@ -2,7 +2,7 @@ import React, { useRef,useState } from 'react'
 import p1 from '../assets/p2.png';
 import p2 from '../assets/p1.png';
 import p3 from '../assets/p3.png';
-import Footer from './footer';
+import Footer from './Footer';
 import Card_pro from './Card_pro';
 
 function Product() {    
