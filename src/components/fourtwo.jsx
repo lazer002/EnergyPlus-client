@@ -59,7 +59,7 @@ function Fourtwo({ pimg, pname, bghover, sidetext, index }) {
         start: 'top 160%',
         end: '0%',
         scrub: 1,
-        markers: true
+        // markers: true
       }
     });
  
