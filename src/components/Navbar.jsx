@@ -15,7 +15,7 @@ function Navbar() {
 
   return (
     <div className="flex justify-center">
-      <nav className='p-2 px-4 bg-white rounded-full md:flex md:items-center md:justify-between absolute top-8 z-10 w-3/4'>
+      <nav className='p-2 px-4 bg-white rounded-full flex md:items-center md:justify-between absolute top-8 z-10 w-3/4'>
         <div className='my-3 flex justify-between items-center z-40'>
           { !isOpen && (
             <span className='text-2xl' onClick={toggleMenu}>
