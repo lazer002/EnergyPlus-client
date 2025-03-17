@@ -3,9 +3,9 @@ import gsap from "gsap";
 import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import '../css/hscroll.css'
+import '../css/drinkCan3D.css'
 import Perks from './Perks.jsx';
 import Details from './details.jsx';
-import Vod from '../assets/video/v3.webm'
 import Footer from './Footer.jsx';
 import Fourtwo from './fourtwo.jsx';
 import p1 from '../assets/p3.png'
@@ -14,6 +14,7 @@ import p3 from '../assets/p5.png'
 import p4 from '../assets/p9.png'
 import Move from './Move.jsx';
 import LocomotiveScroll from 'locomotive-scroll';
+import DrinkCan3D from './DrinkCan3D.jsx';
 // import Carousel from './carousel.jsx'
 // import Crd_caro from './crd_caro.jsx';
 // import Vod2 from '../assets/video/v.mp4'
@@ -61,15 +62,7 @@ function Home() {
   return (
 <>
   <div className="banner">
-    <video
-      src={Vod}
-      loop
-      autoPlay
-      muted
-      className="h-100"
-      data-scroll
-      data-scroll-speed="-1"
-    ></video>
+    <DrinkCan3D />
   </div>
 
   <Move />

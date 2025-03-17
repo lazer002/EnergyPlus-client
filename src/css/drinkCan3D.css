@@ -1,0 +1,74 @@
+.banner {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.banner::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+  z-index: 5;
+}
+
+.banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+  z-index: 5;
+}
+
+/* Cursor styling for the 3D area */
+.banner {
+  cursor: none; /* Hide the default cursor */
+}
+
+/* Custom cursor effect */
+.banner::after {
+  cursor: none;
+}
+
+.banner::before {
+  cursor: none;
+}
+
+/* Model instructions */
+.model-instructions {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  font-size: 14px;
+  z-index: 10;
+}
+
+.model-instructions a {
+  color: #ff5500;
+  margin: 0 5px;
+  text-decoration: underline;
+}
+
+.model-instructions a:hover {
+  color: #ff8800;
+}
+
+/* Make sure the canvas is full size */
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
