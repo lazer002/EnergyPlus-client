@@ -113,8 +113,8 @@ nav {
 
 .animation-container {
 
-  background: rgb(127, 190, 250);
-  /* background:  rgb(105 105 105); */
+  /* background: rgb(127, 190, 250); */
+  background:  black;
   position: fixed;
   height: 100%;
   width: 100%;
@@ -127,7 +127,7 @@ nav {
   left: 70%;
   width: 25rem;
   height: 25rem;
-  background: pink;
+  background: white;
   border-radius: 24% 76% 77% 23% / 30% 30% 70% 70%;
   filter: blur(6rem);
   animation: shape1 20s infinite;
@@ -170,7 +170,7 @@ nav {
   left: 40%;
   width: 35rem;
   height: 25rem;
-  background: lightblue;
+  background: black;
   border-radius: 73% 27% 77% 23% / 53% 4% 96% 47%;
   filter: blur(12rem);
   animation: shape2 35s infinite;
@@ -211,7 +211,7 @@ nav {
   left: 80%;
   width: 25rem;
   height: 25rem;
-  background: lightblue;
+  background: rgba(0, 0, 255, 0.089);
   border-radius: 70% 30% 80% 20% / 42% 25% 75% 58%;
   filter: blur(14rem);
   animation: shape3 35s infinite;
@@ -252,7 +252,7 @@ nav {
   left: 70%;
   width: 25rem;
   height: 25rem;
-  background: pink;
+  background: rgba(109, 4, 4, 0.144);
   border-radius: 24% 76% 77% 23% / 30% 30% 70% 70%;
   filter: blur(5rem);
   animation: shape1 20s infinite;
@@ -264,7 +264,7 @@ nav {
   left: 40%;
   width: 35rem;
   height: 25rem;
-  background: lightyellow;
+  background: white;
   border-radius: 73% 27% 77% 23% / 53% 4% 96% 47%;
   filter: blur(5rem);
   animation: shape2 15s infinite;
@@ -276,7 +276,7 @@ nav {
   left: 80%;
   width: 25rem;
   height: 25rem;
-  background: lightblue;
+  background: rgba(255, 166, 0, 0.103);
   border-radius: 70% 30% 80% 20% / 42% 25% 75% 58%;
   filter: blur(5rem);
   animation: shape3 30s infinite;
