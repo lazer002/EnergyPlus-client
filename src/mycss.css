@@ -401,31 +401,6 @@ nav {
   width: 102%;
 }
 
-/* .banner::after{
-    content: '';
-  height: 100px;
-width: 100%;
-position: absolute;
-top: 0;
-background: rgb(0,0,0);
-background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8071603641456583) 32%, rgba(0,212,255,0) 100%);} */
-.navtbs {
-  display: flex;
-  justify-content: center;
-  align-items: end;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  /* left: -17%; */
-  padding: 20px 30px;
-  line-height: 30%;
-  top: -32px;
-  font-size: 140px;
-  font-weight: 900;
-  z-index: 10;
-
-}
 
 
 

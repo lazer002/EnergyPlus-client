@@ -1,5 +1,4 @@
 import React from 'react'
-import p1 from '../assets/image-removebg-preview (1).png'
 import '../js/animation.js'
 import gsap from "gsap";
 import { useGSAP } from '@gsap/react';

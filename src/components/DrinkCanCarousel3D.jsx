@@ -91,20 +91,35 @@ try {
   };
 }
 
+// BOX CONTAINER DIMENSIONS (in 3D units)
+const BOX_WIDTH = 10;      // 300px equivalent in 3D space
+const BOX_HEIGHT = 3;     // 100px equivalent in 3D space
+const BOX_DEPTH = 0.5;    // 50px equivalent in 3D space
+const BOX_POSITION_X = 0; // Center position
+const BOX_POSITION_Y = 1; // Slightly above center
+const BOX_POSITION_Z = -5; // In front of the scene
+
+// TEXT SIZE RELATIVE TO BOX
+const TEXT_SIZE = 0.2;          // Size of the text relative to box (reduced to fit)
+const TEXT_THICKNESS = 0.01;    // Thickness/depth of the text (extremely thin)
+
 const DrinkCanCarousel3D = () => {
   const mountRef = useRef(null);
   const carouselRef = useRef(null);
   const modelsRef = useRef([]);
   const currentCanIndexRef = useRef(0);
   const isAnimatingRef = useRef(false);
+  const mousePositionRef = useRef({ x: 0, y: 0 }); // Track mouse position
+  const raycasterRef = useRef(new THREE.Raycaster()); // For detecting mouse hover
+  const mouse2DRef = useRef(new THREE.Vector2()); // 2D mouse coordinates
   const rotationSpeedRef = useRef({
-    normal: 0.02,    // Fast rotation between cans
-    slow: 0.003,     // Very slow when can is in front (15% of normal speed)
-    current: 0.02,
+    normal: 0.005,    // Slower rotation between cans
+    slow: 0.001,      // Very slow when can is in front (20% of normal speed)
+    current: 0.005,
     isSlowing: false
   });
   const [autoRotate, setAutoRotate] = useState(true);
-  const [baseSpeed, setBaseSpeed] = useState(0.02);
+  const [baseSpeed, setBaseSpeed] = useState(0.005); // Adjusted base speed
 
   useEffect(() => {
     console.log("Initializing 3D carousel scene");
@@ -140,12 +155,12 @@ const DrinkCanCarousel3D = () => {
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 
-    // Add bloom effect
+    // Add bloom effect with enhanced settings for orange text
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      1.2,    // strength
-      6.4,    // radius
-      12.85    // threshold
+      1.5,    // strength - increased for more intense bloom
+      1.6,    // radius - increased for wider glow
+      0.85    // threshold - lowered to make orange text bloom more
     );
     composer.addPass(bloomPass);
 
@@ -153,6 +168,7 @@ const DrinkCanCarousel3D = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
+    controls.enableZoom = false; 
     controls.minDistance = 10;
     controls.maxDistance = 50;
     controls.maxPolarAngle = Math.PI / 2;
@@ -163,7 +179,7 @@ const DrinkCanCarousel3D = () => {
     rgbeLoader.setPath('/');
     rgbeLoader.load('sky.hdr', function(texture) {
       texture.mapping = THREE.EquirectangularReflectionMapping;
-      scene.background = texture;
+      scene.background = new THREE.Color(0x333333);
       scene.environment = texture;
       renderer.physicallyCorrectLights = true;
       console.log("HDR environment loaded");
@@ -217,7 +233,7 @@ const DrinkCanCarousel3D = () => {
     for (let i = 0; i < numModels; i++) {
       const div = document.createElement('div');
       div.className = 'model-label';
-      div.textContent = `Can ${i+1}`;
+      // div.textContent = `Can ${i+1}`;
       div.style.position = 'absolute';
       div.style.color = 'white';
       div.style.padding = '2px 6px';
@@ -310,31 +326,230 @@ const DrinkCanCarousel3D = () => {
       }
     );
 
-    // Load font and create text
-    const fontLoader = new FontLoader();
-    fontLoader.load('/fonts/helvetiker_regular.typeface.json', (font) => {
-      const textGeometry = new TextGeometry('ENERGY PLUS', {
-        font: font,
-        size: 10,
-        height: 1,
-        curveSegments: 12,
-        bevelEnabled: true,
-        bevelThickness: 0.5,
-        bevelSize: 0.2,
-        bevelOffset: 0,
-        bevelSegments: 5
-      });
+    // Create a box container first
+    console.log("Creating box container for text...");
 
-      const textMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        emissive: new THREE.Color(0x444444), // Emissive color for bloom
-        emissiveIntensity: 1.0
-      });
+    // Create box geometry with specified dimensions
+    const boxGeometry = new THREE.BoxGeometry(BOX_WIDTH, BOX_HEIGHT, BOX_DEPTH);
 
-      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-      textMesh.position.set(-30, 0, -20); // Position the text behind the carousel
-      scene.add(textMesh);
+    // Create an invisible material for the box (no visible borders)
+    const boxMaterial = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0,  // Completely transparent
+      depthWrite: false,
+      side: THREE.DoubleSide
     });
+
+    // Create the box mesh
+    const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    boxMesh.position.set(BOX_POSITION_X, BOX_POSITION_Y, BOX_POSITION_Z);
+
+    // Add box to scene
+    scene.add(boxMesh);
+
+    // Create a flat plane with text texture inside the box
+    console.log("Creating flat text plane...");
+
+    // Create a canvas for the text texture
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    // Set canvas size (power of 2 for better texture performance)
+    canvas.width = 512;
+    canvas.height = 128;
+
+    // Clear canvas with transparent background
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Set text properties
+    const fontSize = 64;
+    context.font = `bold ${fontSize}px Arial, Helvetica, sans-serif`;
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+
+    // Add orange gradient for text
+    const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
+    gradient.addColorStop(0, '#B46000');  // Bright orange
+    gradient.addColorStop(0.5, '#ff6600'); // Deeper orange
+    gradient.addColorStop(1, '#ff8800');  // Bright orange again
+
+    // Fill text with gradient
+    context.fillStyle = gradient;
+    context.fillText('ENERGY PLUS', canvas.width / 2, canvas.height / 2);
+
+    // Add glow effect
+    context.shadowColor = '#ff5500';
+    context.shadowBlur = 15;
+    context.fillText('ENERGY PLUS', canvas.width / 2, canvas.height / 2);
+
+    // Add second layer of glow for enhanced bloom effect
+    context.shadowColor = '#ffaa00';
+    context.shadowBlur = 30;
+    context.fillText('ENERGY PLUS', canvas.width / 2, canvas.height / 2);
+
+    // Create texture from canvas
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+
+    // Create dimensions for elements
+    const planeWidth = BOX_WIDTH * 0.9;  // 90% of box width
+    const planeHeight = BOX_HEIGHT * 0.5; // 50% of box height
+    const backingDepth = BOX_DEPTH * 0.3; // 30% of box depth for thicker 3D backing
+
+    // Create a 3D backing for the text (thicker box)
+    const backingGeometry = new THREE.BoxGeometry(planeWidth, planeHeight, backingDepth);
+    const backingMaterial = new THREE.MeshStandardMaterial({
+      color: 0xff6600,  // Orange color matching text
+      metalness: 0.9,   // Increased metalness for more reflectivity
+      roughness: 0.1,   // Decreased roughness for smoother, more reflective surface
+      emissive: 0xff4400, // Orange emissive color
+      emissiveIntensity: 0.5, // Increased emissive intensity for stronger bloom
+      envMapIntensity: 1.5    // Increased environment map intensity for better reflections
+    });
+
+    // Create the backing mesh
+    const backingMesh = new THREE.Mesh(backingGeometry, backingMaterial);
+
+    // Position the backing inside the box
+    backingMesh.position.set(
+      0,                    // Center horizontally
+      BOX_HEIGHT * 0.1,     // Slightly above center
+      0                     // Center in z-axis
+    );
+
+    // Add the backing to the box
+    boxMesh.add(backingMesh);
+
+    // Create a plane geometry for the text that sits just in front of the backing
+    const planeGeometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
+
+    // Create material with the text texture
+    const planeMaterial = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+
+    // Create the front plane mesh
+    const frontTextPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+    // Position the plane just in front of the backing
+    frontTextPlane.position.set(
+      0,                    // Center horizontally
+      0,                    // Same height as backing
+      backingDepth/2 + 0.01 // Just in front of the backing
+    );
+
+    // Add the front plane to the backing
+    backingMesh.add(frontTextPlane);
+
+    // Create the back plane mesh (using the same texture)
+    const backTextPlane = new THREE.Mesh(planeGeometry, planeMaterial.clone());
+
+    // Position the back plane just behind the backing
+    backTextPlane.position.set(
+      0,                     // Center horizontally
+      0,                     // Same height as backing
+      -backingDepth/2 - 0.01 // Just behind the backing
+    );
+
+    // Rotate the back plane to face the back
+    backTextPlane.rotation.y = Math.PI;
+
+    // Add the back plane to the backing
+    backingMesh.add(backTextPlane);
+
+    // Add 3D beveled frame around the text for additional depth
+    const frameWidth = planeWidth * 1.05;
+    const frameHeight = planeHeight * 1.05;
+    const frameDepth = backingDepth * 0.5;
+
+    // Create rounded rectangle shape for the frame
+    const frameShape = new THREE.Shape();
+    const frameRadius = 0.1; // Corner radius
+
+    frameShape.moveTo(-frameWidth/2 + frameRadius, -frameHeight/2);
+    frameShape.lineTo(frameWidth/2 - frameRadius, -frameHeight/2);
+    frameShape.quadraticCurveTo(frameWidth/2, -frameHeight/2, frameWidth/2, -frameHeight/2 + frameRadius);
+    frameShape.lineTo(frameWidth/2, frameHeight/2 - frameRadius);
+    frameShape.quadraticCurveTo(frameWidth/2, frameHeight/2, frameWidth/2 - frameRadius, frameHeight/2);
+    frameShape.lineTo(-frameWidth/2 + frameRadius, frameHeight/2);
+    frameShape.quadraticCurveTo(-frameWidth/2, frameHeight/2, -frameWidth/2, frameHeight/2 - frameRadius);
+    frameShape.lineTo(-frameWidth/2, -frameHeight/2 + frameRadius);
+    frameShape.quadraticCurveTo(-frameWidth/2, -frameHeight/2, -frameWidth/2 + frameRadius, -frameHeight/2);
+
+    // Create hole in the shape (for the inner part)
+    const holeShape = new THREE.Shape();
+    const innerWidth = planeWidth * 0.95;
+    const innerHeight = planeHeight * 0.95;
+    const innerRadius = 0.08;
+
+    holeShape.moveTo(-innerWidth/2 + innerRadius, -innerHeight/2);
+    holeShape.lineTo(innerWidth/2 - innerRadius, -innerHeight/2);
+    holeShape.quadraticCurveTo(innerWidth/2, -innerHeight/2, innerWidth/2, -innerHeight/2 + innerRadius);
+    holeShape.lineTo(innerWidth/2, innerHeight/2 - innerRadius);
+    holeShape.quadraticCurveTo(innerWidth/2, innerHeight/2, innerWidth/2 - innerRadius, innerHeight/2);
+    holeShape.lineTo(-innerWidth/2 + innerRadius, innerHeight/2);
+    holeShape.quadraticCurveTo(-innerWidth/2, innerHeight/2, -innerWidth/2, innerHeight/2 - innerRadius);
+    holeShape.lineTo(-innerWidth/2, -innerHeight/2 + innerRadius);
+    holeShape.quadraticCurveTo(-innerWidth/2, -innerHeight/2, -innerWidth/2 + innerRadius, -innerHeight/2);
+
+    frameShape.holes.push(holeShape);
+
+    // Extrude settings
+    const extrudeSettings = {
+      steps: 1,
+      depth: frameDepth,
+      bevelEnabled: true,
+      bevelThickness: 0.02,
+      bevelSize: 0.02,
+      bevelOffset: 0,
+      bevelSegments: 3
+    };
+
+    // Create extruded geometry
+    const frameGeometry = new THREE.ExtrudeGeometry(frameShape, extrudeSettings);
+
+    // Create material for the frame with enhanced metallic bloom
+    const frameMaterial = new THREE.MeshStandardMaterial({
+      color: 0xff9900,
+      metalness: 0.95,  // Increased metalness for more reflectivity
+      roughness: 0.05,  // Decreased roughness for smoother, more reflective surface
+      emissive: 0xff7700,
+      emissiveIntensity: 0.4,  // Increased emissive intensity for stronger bloom
+      envMapIntensity: 2.0     // Increased environment map intensity for better reflections
+    });
+
+    // Create frame mesh
+    const frameMesh = new THREE.Mesh(frameGeometry, frameMaterial);
+
+    // Position frame
+    frameMesh.position.set(0, 0, -backingDepth/2 - frameDepth/2);
+
+    // Add frame to backing
+    backingMesh.add(frameMesh);
+
+    // Create a reference to track rotation
+    const rotationRef = { value: 0 };
+
+    // Animate the box with a floating effect and slow continuous rotation
+    const animateBox = () => {
+      const time = Date.now() * 0.001;
+
+      // Subtle floating movement
+      boxMesh.position.y = Math.sin(time * 0.5) * 0.2 + BOX_POSITION_Y;
+
+      // Slow continuous rotation
+      rotationRef.value += 0.003; // Very slow rotation speed
+      boxMesh.rotation.y = rotationRef.value;
+
+      requestAnimationFrame(animateBox);
+    };
+
+    animateBox();
+
+    console.log("2D text plane added inside box container");
 
     // Function to determine if a model is at the front position
     const isModelAtFront = (model) => {
@@ -416,8 +631,30 @@ const DrinkCanCarousel3D = () => {
       // Update controls
       controls.update();
 
-      // Update label positions
+      // Update raycaster with current mouse position
+      raycasterRef.current.setFromCamera(mouse2DRef.current, camera);
+
+      // Update label positions and apply wave effect
       if (labels.length > 0 && modelsRef.current.length > 0) {
+        // Check for intersections with models
+        const intersects = raycasterRef.current.intersectObjects(scene.children, true);
+
+        // Track which models the mouse is hovering near
+        const hoverModels = new Set();
+
+        // Find models that are being hovered
+        intersects.forEach(intersect => {
+          let obj = intersect.object;
+          // Traverse up to find the model container
+          while (obj && obj.parent) {
+            if (obj.parent === carousel) {
+              hoverModels.add(obj);
+              break;
+            }
+            obj = obj.parent;
+          }
+        });
+
         modelsRef.current.forEach((model, i) => {
           if (labels[i]) {
             const worldPos = new THREE.Vector3();
@@ -437,26 +674,73 @@ const DrinkCanCarousel3D = () => {
             if (isModelAtFront(model)) {
               labels[i].style.opacity = '1';
               labels[i].style.fontSize = '14px';
-
-              // If this model is in front, rotate it like a fan (around its own center)
-              if (rotationSpeedRef.current.isSlowing) {
-                // Get the first child of the model container (the actual can model)
-                if (model.children.length > 0) {
-                  const can = model.children[0];
-
-                  // Rotate the can around its own center (like a fan)
-                  can.rotation.y += 0.15; // Faster continuous rotation for more visible effect
-
-                  // Reset rotation if it gets too large to avoid precision issues
-                  if (can.rotation.y > Math.PI * 20) {
-                    can.rotation.y = 0;
-                  }
-                }
-              }
             } else {
               labels[i].style.opacity = '0.6';
               labels[i].style.fontSize = '12px';
             }
+          }
+
+          // Apply wave effect
+          const time = Date.now() * 0.001; // Time in seconds
+          const waveHeight = 2; // Adjust the height of the wave
+          const waveSpeed = 0.5; // Adjust the speed of the wave
+          model.position.y = Math.sin(time * waveSpeed + i) * waveHeight;
+
+          // Calculate distance from mouse to model in screen space
+          const worldPos = new THREE.Vector3();
+          worldPos.setFromMatrixPosition(model.matrixWorld);
+          const vector = worldPos.clone();
+          vector.project(camera);
+
+          const modelScreenX = (vector.x * 0.5 + 0.5) * window.innerWidth;
+          const modelScreenY = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
+
+          const mouseX = mousePositionRef.current.x;
+          const mouseY = mousePositionRef.current.y;
+
+          const distance = Math.sqrt(
+            Math.pow(modelScreenX - mouseX, 2) +
+            Math.pow(modelScreenY - mouseY, 2)
+          );
+
+          // Get the original position in the circle
+          const originalAngle = (i / numModels) * Math.PI * 2;
+          const originalX = Math.sin(originalAngle) * radius;
+          const originalZ = Math.cos(originalAngle) * radius;
+
+          // If mouse is close to the model, make it run away
+          if (distance < 300) { // Even larger detection radius for ultra-smooth transition
+            // Calculate direction away from mouse
+            const angle = Math.atan2(modelScreenY - mouseY, modelScreenX - mouseX);
+
+            // Use a stronger repel effect that doesn't diminish as quickly with distance
+            // This allows models to be pushed further away
+            const repelStrength = Math.max(0, 1 - distance / 300) * 0.5; // Increased strength for more movement
+
+            // Calculate repel vector with increased magnitude for more dramatic movement
+            // Increased multiplier to allow models to move much further
+            const repelX = Math.cos(angle) * repelStrength * 8; // Increased multiplier (2 -> 8)
+            const repelZ = Math.sin(angle) * repelStrength * 8;
+
+            // Calculate target position with unlimited repel effect
+            // No longer tied to the original circle position - can go anywhere
+            const targetX = model.position.x + repelX;
+            const targetZ = model.position.z + repelZ;
+
+            // Apply the repel effect with extremely smooth interpolation
+            model.position.x += (targetX - model.position.x) * 0.05; // Slightly faster to see movement
+            model.position.z += (targetZ - model.position.z) * 0.05;
+
+            // Make the model rotate away from the mouse
+            const targetRotationY = model.userData.baseRotation + repelStrength * Math.PI * 0.3; // More rotation
+            model.rotation.y += (targetRotationY - model.rotation.y) * 0.05;
+          } else {
+            // Very smoothly return to original position
+            model.position.x += (originalX - model.position.x) * 0.02; // Much slower return
+            model.position.z += (originalZ - model.position.z) * 0.02;
+
+            // Reset rotation very gradually
+            model.rotation.y += (model.userData.baseRotation - model.rotation.y) * 0.02;
           }
         });
       }
@@ -476,11 +760,26 @@ const DrinkCanCarousel3D = () => {
       controls.update();
     };
 
+    // Track mouse position for the "run away" effect
+    const handleMouseMove = (event) => {
+      // Update mouse position
+      mousePositionRef.current = {
+        x: event.clientX,
+        y: event.clientY
+      };
+
+      // Calculate normalized device coordinates (-1 to +1)
+      mouse2DRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse2DRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+
     window.addEventListener('resize', handleResize);
+    window.addEventListener('mousemove', handleMouseMove);
 
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
 
       // Remove all labels
       labels.forEach(label => {
@@ -501,7 +800,7 @@ const DrinkCanCarousel3D = () => {
   useEffect(() => {
     if (typeof window !== 'undefined' && rotationSpeedRef.current) {
       rotationSpeedRef.current.normal = baseSpeed;
-      rotationSpeedRef.current.slow = baseSpeed * 0.15; // 15% of normal speed for more dramatic slowdown
+      rotationSpeedRef.current.slow = baseSpeed * 0.2; // 20% of normal speed
 
       // Only update current speed if not in a slowdown phase
       if (!rotationSpeedRef.current.isSlowing) {
@@ -513,8 +812,6 @@ const DrinkCanCarousel3D = () => {
   return (
     <div style={{ width: '100%', height: '100vh' }}>
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
-
- 
     </div>
   );
 };

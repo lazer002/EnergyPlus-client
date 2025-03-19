@@ -20,7 +20,7 @@ import DrinkCan3D from './DrinkCan3D.jsx';
 // import Vod2 from '../assets/video/v.mp4'
 //  import Sliderrr from './slider.jsx'
 // import Bannertitle from './Bannertitle.jsx';
-// import banner from '../assets/da.png'
+import banner from '../assets/p9.png'
 
 function Home() {
 
@@ -28,6 +28,7 @@ function Home() {
   const locomotiveScroll = new LocomotiveScroll()
 
   gsap.registerPlugin(ScrollTrigger)
+   const tl = gsap.timeline()
   useGSAP(() => {
     const section = gsap.utils.toArray('.page')
 
@@ -57,6 +58,28 @@ function Home() {
   
       }
     })
+    tl.to('.weekly-offer img', {
+      width: '100%', // Expanding to full width
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.weekly-offer',
+        start: 'top top',
+        end: 'bottom center',
+        scrub: 2, // Smooth animation on scroll
+        pin: true,
+      },
+    });
+    tl.to('.weekly-offer',{
+      width: '100%',
+      backgroundColor:'blue',
+      scrollTrigger: {
+        trigger: '.weekly-offer',
+        start: 'top top',
+        end: 'bottom center',
+        scrub: 2, // Smooth animation on scroll
+       
+      },
+    })
   });
 
   return (
@@ -64,6 +87,23 @@ function Home() {
   <div className="banner">
     <DrinkCan3D />
   </div>
+
+
+
+
+
+<div className=' relative h-screen w-screen weekly-offer overflow-hidden'>
+
+<div className=' absolute translate-x-[-50%] translate-y-[-50%] top-1/2 left-1/2 text-center z-10'>
+  <div className='text-xl font-semibold my-5'> Weekly Offer</div>
+  <div className=' text-6xl font-bold text-center mt-10 mb-10 '>GET OUR BRAND NEW FLAVOR iCEARA</div>
+</div>
+<img src={banner} alt="" className='absolute  translate-x-[-50%] translate-y-[-50%] top-1/2 left-1/2 w-32'/>
+
+</div>
+
+
+
 
   <Move />
   <Details />
