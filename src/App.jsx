@@ -8,7 +8,7 @@ import Contect from './components/Contect.jsx';
 import About from './components/About.jsx';
 import Product from './components/Product.jsx';
 import LocomotiveScroll from 'locomotive-scroll';
-import '../index.js'
+
 import './mycss.css'
 import MouseTracker from './components/MouseTracker.jsx';
 

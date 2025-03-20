@@ -92,11 +92,11 @@ try {
 }
 
 // BOX CONTAINER DIMENSIONS (in 3D units)
-const BOX_WIDTH = 10;      // 300px equivalent in 3D space
-const BOX_HEIGHT = 3;     // 100px equivalent in 3D space
+const BOX_WIDTH = 12;      // 300px equivalent in 3D space
+const BOX_HEIGHT = 4;     // 100px equivalent in 3D space
 const BOX_DEPTH = 0.5;    // 50px equivalent in 3D space
-const BOX_POSITION_X = 0; // Center position
-const BOX_POSITION_Y = 1; // Slightly above center
+const BOX_POSITION_X = 2; // Center position
+const BOX_POSITION_Y = -1; // Slightly above center
 const BOX_POSITION_Z = -5; // In front of the scene
 
 // TEXT SIZE RELATIVE TO BOX
@@ -228,26 +228,7 @@ const DrinkCanCarousel3D = () => {
 
     console.log(`Loading model from ${modelFile}`);
 
-    // Add text labels
-    const labels = [];
-    for (let i = 0; i < numModels; i++) {
-      const div = document.createElement('div');
-      div.className = 'model-label';
-      // div.textContent = `Can ${i+1}`;
-      div.style.position = 'absolute';
-      div.style.color = 'white';
-      div.style.padding = '2px 6px';
-      div.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-      div.style.borderRadius = '4px';
-      div.style.fontSize = '12px';
-      div.style.fontWeight = 'bold';
-      div.style.pointerEvents = 'none'; // Prevent interaction with labels
-      div.style.opacity = '0.8';
-      div.style.transition = 'opacity 0.3s ease';
-      document.body.appendChild(div);
-      labels.push(div);
-    }
-
+   
     // Load the actual model
     loader.load(
       modelFile,
@@ -394,17 +375,19 @@ const DrinkCanCarousel3D = () => {
     // Create dimensions for elements
     const planeWidth = BOX_WIDTH * 0.9;  // 90% of box width
     const planeHeight = BOX_HEIGHT * 0.5; // 50% of box height
-    const backingDepth = BOX_DEPTH * 0.3; // 30% of box depth for thicker 3D backing
+    const backingDepth = BOX_DEPTH * 0.8; // 80% of box depth for much thicker 3D backing
 
     // Create a 3D backing for the text (thicker box)
     const backingGeometry = new THREE.BoxGeometry(planeWidth, planeHeight, backingDepth);
     const backingMaterial = new THREE.MeshStandardMaterial({
       color: 0xff6600,  // Orange color matching text
-      metalness: 0.9,   // Increased metalness for more reflectivity
-      roughness: 0.1,   // Decreased roughness for smoother, more reflective surface
+      metalness: 0.95,  // Further increased metalness for more reflectivity
+      roughness: 0.05,  // Further decreased roughness for smoother, more reflective surface
       emissive: 0xff4400, // Orange emissive color
-      emissiveIntensity: 0.5, // Increased emissive intensity for stronger bloom
-      envMapIntensity: 1.5    // Increased environment map intensity for better reflections
+      emissiveIntensity: 0.6, // Increased emissive intensity for stronger bloom
+      envMapIntensity: 2.0,   // Increased environment map intensity for better reflections
+      clearcoat: 0.5,         // Add clearcoat for a glossy finish
+      clearcoatRoughness: 0.1 // Slightly rough clearcoat for realistic appearance
     });
 
     // Create the backing mesh
@@ -438,7 +421,7 @@ const DrinkCanCarousel3D = () => {
     frontTextPlane.position.set(
       0,                    // Center horizontally
       0,                    // Same height as backing
-      backingDepth/2 + 0.01 // Just in front of the backing
+      backingDepth/2 + 0.02 // Just in front of the backing (increased offset)
     );
 
     // Add the front plane to the backing
@@ -451,7 +434,7 @@ const DrinkCanCarousel3D = () => {
     backTextPlane.position.set(
       0,                     // Center horizontally
       0,                     // Same height as backing
-      -backingDepth/2 - 0.01 // Just behind the backing
+      -backingDepth/2 - 0.02 // Just behind the backing (increased offset)
     );
 
     // Rotate the back plane to face the back
@@ -463,7 +446,7 @@ const DrinkCanCarousel3D = () => {
     // Add 3D beveled frame around the text for additional depth
     const frameWidth = planeWidth * 1.05;
     const frameHeight = planeHeight * 1.05;
-    const frameDepth = backingDepth * 0.5;
+    const frameDepth = backingDepth * 0.7; // Increased frame depth to match thicker backing
 
     // Create rounded rectangle shape for the frame
     const frameShape = new THREE.Shape();
@@ -499,13 +482,13 @@ const DrinkCanCarousel3D = () => {
 
     // Extrude settings
     const extrudeSettings = {
-      steps: 1,
+      steps: 2,
       depth: frameDepth,
       bevelEnabled: true,
-      bevelThickness: 0.02,
-      bevelSize: 0.02,
+      bevelThickness: 0.05,  // Increased bevel thickness
+      bevelSize: 0.04,       // Increased bevel size
       bevelOffset: 0,
-      bevelSegments: 3
+      bevelSegments: 5       // More segments for smoother bevels
     };
 
     // Create extruded geometry
@@ -551,15 +534,6 @@ const DrinkCanCarousel3D = () => {
 
     console.log("2D text plane added inside box container");
 
-    // Function to determine if a model is at the front position
-    const isModelAtFront = (model) => {
-      // Convert model position to world position
-      const worldPos = new THREE.Vector3();
-      worldPos.setFromMatrixPosition(model.matrixWorld);
-
-      // Check if it's close to the front (z axis)
-      return Math.abs(worldPos.z - 10) < 1 && Math.abs(worldPos.x) < 1;
-    };
 
     // Variable for slowdown timer
     let slowdownTimer = null;
@@ -634,8 +608,8 @@ const DrinkCanCarousel3D = () => {
       // Update raycaster with current mouse position
       raycasterRef.current.setFromCamera(mouse2DRef.current, camera);
 
-      // Update label positions and apply wave effect
-      if (labels.length > 0 && modelsRef.current.length > 0) {
+      // Apply wave effect to models
+      if (modelsRef.current.length > 0) {
         // Check for intersections with models
         const intersects = raycasterRef.current.intersectObjects(scene.children, true);
 
@@ -656,29 +630,6 @@ const DrinkCanCarousel3D = () => {
         });
 
         modelsRef.current.forEach((model, i) => {
-          if (labels[i]) {
-            const worldPos = new THREE.Vector3();
-            worldPos.setFromMatrixPosition(model.matrixWorld);
-            worldPos.y += 3; // Position above the model
-
-            const vector = worldPos.clone();
-            vector.project(camera);
-
-            const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
-            const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
-
-            labels[i].style.left = `${x}px`;
-            labels[i].style.top = `${y}px`;
-
-            // Make labels more visible when in front
-            if (isModelAtFront(model)) {
-              labels[i].style.opacity = '1';
-              labels[i].style.fontSize = '14px';
-            } else {
-              labels[i].style.opacity = '0.6';
-              labels[i].style.fontSize = '12px';
-            }
-          }
 
           // Apply wave effect
           const time = Date.now() * 0.001; // Time in seconds
@@ -780,13 +731,6 @@ const DrinkCanCarousel3D = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
-
-      // Remove all labels
-      labels.forEach(label => {
-        if (document.body.contains(label)) {
-          document.body.removeChild(label);
-        }
-      });
 
       if (mountRef.current && mountRef.current.contains(renderer.domElement)) {
         mountRef.current.removeChild(renderer.domElement);

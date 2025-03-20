@@ -13,20 +13,22 @@ function Move() {
     gsap.to(".zo", {
       scrollTrigger: {
         trigger: ".zo",
-        start: "20px 80%",
-        end: "80% 80px",
+     
+        start: "100px 80%",
+      end: "100px 20%",
         scrub: 2,
-
       },
-      scale: 2,
+      scale: 2.5,
       duration: 3,
+  
     })
+    
 
   })
   return (
     <>
 <div className="zo">
-      <div className=" mt-96 mb-56" data-scroll data-scroll-speed='-0.3' >
+      <div className="flex justify-center items-center mt-40" >
         <div className='scroll-anime text-white' >
           <div className='scroll-div'>
             <div>GIVE</div>
