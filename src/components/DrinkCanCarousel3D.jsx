@@ -179,7 +179,7 @@ const DrinkCanCarousel3D = () => {
     rgbeLoader.setPath('/');
     rgbeLoader.load('sky.hdr', function(texture) {
       texture.mapping = THREE.EquirectangularReflectionMapping;
-      scene.background = new THREE.Color(0x333333);
+      scene.background = new THREE.Color(0xFF5F1F);
       scene.environment = texture;
       renderer.physicallyCorrectLights = true;
       console.log("HDR environment loaded");

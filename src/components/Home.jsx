@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import gsap from "gsap";
 import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
@@ -12,7 +12,6 @@ import p1 from '../assets/p3.png';
 import p2 from '../assets/p6.png';
 import p3 from '../assets/p5.png';
 import p4 from '../assets/p9.png';
-import Move from './Move.jsx';
 import LocomotiveScroll from 'locomotive-scroll';
 import DrinkCan3D from './DrinkCanCarousel3D.jsx';
 import banner from '../assets/p9.png';
@@ -20,6 +19,7 @@ import ProductDetails from './SimpleDetails.jsx';
 
 function Home() {
   const locomotiveScroll = new LocomotiveScroll();
+  const animate = useRef(null)
 
   gsap.registerPlugin(ScrollTrigger);
   useGSAP(() => {
@@ -35,19 +35,20 @@ function Home() {
         end: '+=5000',
       },
     });
-
     gsap.to('.offertext', {
-      transform: 'translateX(-300%)',
+      x: '-300%',
       scrollTrigger: {
-        trigger: 'offertext',
+        trigger: '.offertext',
+
         scrub: 3,
       },
     });
 
     gsap.from('.offertext1', {
-      transform: 'translateX(-300%)',
+      x: '-300%',
       scrollTrigger: {
-        trigger: 'offertext1',
+        trigger: '.offertext1',
+
         scrub: 3,
       },
     });
@@ -55,11 +56,9 @@ function Home() {
     // Weekly Offer Animation Timeline
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: '.weekly-offer',
-        start: 'top top',
-        end: '+=400%',
+        trigger: '.body',
+
         scrub: 9,
-        pin: true,
       },
     });
 
@@ -67,12 +66,14 @@ function Home() {
       width: '60%',
       ease: 'none',
       duration: 3,
+      
     });
     tl.to('.weekly-offer', {
       backgroundColor: '#ff7300',
       borderRadius: '3rem',
       ease: 'power2.inOut',
       duration: 4,
+      pin: true,
     });
 
     tl.to('.weekly-offer img', {
@@ -84,7 +85,7 @@ function Home() {
 
     tl.to('.weekly-offer', {
       scale: 0.8,
-      
+
       borderRadius: '1rem',
       ease: 'power2.inOut',
       duration: 2,
@@ -93,8 +94,22 @@ function Home() {
       scale: 0.8,
       borderRadius: '1rem',
       ease: 'power2.inOut',
-      duration: 2,
+      duration: 6,
     });
+
+    gsap.to(animate.current, {
+      scrollTrigger: {
+        trigger: animate.current,
+        start: "50px 80%",
+        end: "100px 20%",
+        scrub: 2,
+      },
+      y: "-=100",
+      scale: 2.5,
+      duration: 3,
+
+    })
+
 
   });
 
@@ -118,15 +133,130 @@ function Home() {
         />
       </div>
 
-      <div className="">
-  
-     <Move />
-     </div>
+        <div ref={animate} className="flex justify-center items-center relative" >
+          <div className='scroll-anime text-white' >
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className='scroll-div'>
+                <div>GIVE</div>
+                <div className='size-20 bg-orange-600 rounded-full m-8'></div>
+                <div>YOU</div>
+                <div className='size-20 bg-orange-600 rounded-full m-8'></div>
+                <div>ENERGY</div>
+                <div className='size-20 bg-orange-600 rounded-full m-8'></div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-      <div className=" bg-red-700">
-        <Details />
-     
+
+
+      <div className=''>
+        <div className="text-banner bg-black relative -bottom-16 rotate-1 z-50 overflow-hidden">
+          <div className="offertext flex border-2 border-white py-2">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div key={index} className="whitespace-nowrap px-8">
+                $ Get Discount Up TO 30% $
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-banner bg-black relative -bottom-24 -rotate-1 z-50">
+          <div className="offertext1 flex border-2 border-white py-2 text-left">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div key={index} className="whitespace-nowrap px-8">
+                $ Get Discount Up TO 30% $
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-banner bg-black relative py-12 rotate-3 -top-4 -left-2 z-40">
+          <div className="offertext1 flex border-2 border-white text-left">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div key={index} className="whitespace-nowrap px-8">
+                $ Get Discount Up TO 30% $
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-banner bg-black relative -rotate-1 z-50 overflow-hidden -top-12">
+          <div className="offertext flex border-2 border-white py-2">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div key={index} className="whitespace-nowrap px-8">
+                $ Get Discount Up TO 30% $
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+
+
+
+
+      <div>
+        <Details />
+      </div>
+
+      <div className=' '>
+        <div className="text-banner bg-black relative -bottom-16 rotate-1 z-50 overflow-hidden">
+          <div className="offertext flex border-2 border-white py-2">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div key={index} className="whitespace-nowrap px-8">
+                $ Get Discount Up TO 30% $
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-banner bg-black relative -bottom-24 -rotate-1 z-50">
+          <div className="offertext1 flex border-2 border-white py-2 text-left">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div key={index} className="whitespace-nowrap px-8">
+                $ Get Discount Up TO 30% $
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-banner bg-black relative py-12 rotate-3 -top-4 -left-2 z-40">
+          <div className="offertext1 flex border-2 border-white text-left">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div key={index} className="whitespace-nowrap px-8">
+                $ Get Discount Up TO 30% $
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-banner bg-black relative -rotate-1 z-50 overflow-hidden -top-12">
+          <div className="offertext flex border-2 border-white py-2">
+            {Array.from({ length: 20 }).map((_, index) => (
+              <div key={index} className="whitespace-nowrap px-8">
+                $ Get Discount Up TO 30% $
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+
+
+      
+      <div className="wrapper -top-20">
+    <div className="pages">
+      <Fourtwo pimg={p1} bghover="bg-orange-600 text-white" sidetext="OrangeTang Flavor" index={0} />
+      <Fourtwo pimg={p2} bghover="bg-white text-black" sidetext="Lemon Flavor" index={1} />
+      <Fourtwo pimg={p3} bghover="bg-red-700 text-white" sidetext="Pomegranate Flavor" index={2} />
+      <Fourtwo pimg={p4} bghover="bg-pink-600 text-white" sidetext="Lychee Flavor" index={3} />
+    </div>
+  </div>
+
+  <Perks />
+  <Footer />
+
+
     </>
   );
 }

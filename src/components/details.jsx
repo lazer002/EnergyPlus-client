@@ -141,13 +141,13 @@ function ModelViewer() {
         modelRef.current.rotation.y = THREE.MathUtils.lerp(
           modelRef.current.rotation.y,
           targetRotation.y,
-          0.03 // Faster response on Y axis
+          0.09 // Faster response on Y axis
         );
 
         modelRef.current.rotation.x = THREE.MathUtils.lerp(
           modelRef.current.rotation.x,
           targetRotation.x,
-          0.02 // Slower response on X axis for more natural movement
+          0.06 // Slower response on X axis for more natural movement
         );
 
         // Add a subtle continuous rotation
@@ -204,78 +204,48 @@ function Details() {
   const bottomRef = useRef(null);
   const sectionRef = useRef(null);
 
-  useGSAP(() => {
-    ScrollTrigger.getAll().forEach(st => st.kill());
-
-    const sectionTrigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: "top bottom",
-      end: "bottom top",
-      onEnter: () => {
-        initMarquees();
-      },
-      onEnterBack: () => {
-        initMarquees();
-      }
-    });
-
-    function initMarquees() {
-      gsap.killTweensOf(topRef.current);
-      gsap.killTweensOf(bottomRef.current);
-
-      gsap.set(topRef.current, { xPercent: 0 });
-      gsap.set(bottomRef.current, { xPercent: 0 });
-
-      gsap.to(topRef.current, {
-        xPercent: -50,
-        ease: "none",
-        duration: 70,
-        repeat: -1
-      });
-
-      gsap.to(bottomRef.current, {
-        xPercent: -50,
-        ease: "none",
-        duration: 70,
-        repeat: -1
-      });
-    }
-
-    if (ScrollTrigger.isInViewport(sectionRef.current)) {
-      initMarquees();
-    }
-
-    return () => {
-      ScrollTrigger.getAll().forEach(st => st.kill());
-      gsap.killTweensOf(topRef.current);
-      gsap.killTweensOf(bottomRef.current);
-    };
-  }, []);
-
   const items = [
     ' Mango', ' Strawberry', ' Citrus', ' Watermelon', ' Orange',
     ' Pineapple', ' Coconut', ' Grape', ' Blueberry', ' Cherry'
   ];
 
+  useGSAP(() => {
+    gsap.set(sectionRef.current, {
+      scale: 0.5,
+      y: 200,
+  
+    });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 90%", // Start animation when the top of the section is 80% from the top of viewport
+        end: "top 30%",
+        scrub: 1, // Smooth scrubbing effect
+      }
+    });
+
+    // Add animation to timeline for the entire section
+    tl.to(sectionRef.current, {
+      scale: 1,
+      y: 0,
+  
+      duration: 1,
+      ease: "power2.out"
+    });
+
+  }, { scope: sectionRef });
+
   return (
-    <div ref={sectionRef} className="min-h-screen ">
-            <div className="relative bg-black">
-          <div ref={topRef} className="whitespace-nowrap flex">
-            {[...items, ...items].map((item, index) => (
-              <div key={index} className="text-4xl font-bold px-8 text-white/80">
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      <div className="container mx-auto px-4 py-16 ">
+    <div ref={sectionRef} className="min-h-fit w-10/12 mx-auto shadow-2xl rounded-3xl bg-orange-500 overflow-hidden flex flex-col">
+ 
+      <div className=" mx-auto px-4 py-16 flex-grow">
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="w-full lg:w-1/2 h-[500px] relative bg-transparent">
             <ModelViewer />
           </div>
 
           <div className="w-full lg:w-1/2 text-white space-y-6 relative">
-        
             <h1 className="text-4xl md:text-5xl font-bold">Energy Drink</h1>
             <p className="text-white/80 text-lg">
               Our premium energy drink provides the boost you need with a refreshing taste.
@@ -313,20 +283,7 @@ function Details() {
         </div>
       </div>
 
-      <div className="py-16 overflow-hidden">
   
-
-        <div className="relative mt-4 bg-black">
-          <div ref={bottomRef} className="whitespace-nowrap flex">
-            {[...items.reverse(), ...items.reverse()].map((item, index) => (
-              <div key={index} className="text-4xl font-bold px-8 text-white/80">
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
     </div>
   );
 }
